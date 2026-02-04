@@ -32,6 +32,50 @@ namespace Mreze1
                 Console.WriteLine(poruka);
                 Console.WriteLine("--------------------");
 
+                if (poruka.StartsWith("PRIJAVA:"))
+                {
+                    string sadrzaj = poruka.Substring(8).Trim();
+                    string[] delovi = sadrzaj.Split(',');
+
+                    string ime = delovi[0].Trim();
+
+                    bool ispravnaPrijava = true;
+
+                    Console.WriteLine("Ime igraca: " + ime);
+                    Console.WriteLine("Izabrane igre:");
+
+                    for (int i = 1; i < delovi.Length; i++)
+                    {
+                        string igra = delovi[i].Trim();
+
+                        if (igra != "an" && igra != "po" && igra != "as")
+                        {
+                            ispravnaPrijava = false;
+                        }
+                        else
+                        {
+                            Console.WriteLine("- " + igra);
+                        }
+                    }
+
+                    if (!ispravnaPrijava)
+                    {
+                        Console.WriteLine("Prijava NIJE ispravna – nepoznata igra.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Prijava je ispravna.");
+                        // TEK OVDE kasnije:
+                        // - saljes TCP port
+                        // - cuvas igraca
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Neispravan format poruke.");
+                }
+
+
 
             }
         }
