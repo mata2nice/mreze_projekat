@@ -74,6 +74,22 @@ namespace Mreze1
                     }
                     else
                     {
+
+                        // BROJ IGARA (ime je delovi[0], igre su od 1 nadalje)
+                        int brojIgara = delovi.Length - 1;
+
+                        // KREIRAMO NOVOG IGRACA
+                        Igrac noviIgrac = new Igrac(sledeciId, ime, brojIgara);
+
+                        // DODAJEMO U LISTU
+                        igraci.Add(noviIgrac);
+
+                        Console.WriteLine("Kreiran igrac sa ID = " + sledeciId);
+
+                        // POVECAVAMO ID ZA SLEDECEG
+                        sledeciId++;
+
+
                         Console.WriteLine("Prijava je ispravna.");
 
                         // 1) Saljemo TCP info klijentu (UDP odgovor)
