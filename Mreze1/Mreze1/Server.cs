@@ -31,6 +31,17 @@ namespace Mreze1
             Console.WriteLine("TCP server (listen) spreman na portu 51000...");
 
 
+            Anagrami a = new Anagrami();
+            a.UcitajRec();
+
+
+            //cisto proveravamo ko osvaja ligu
+            Console.WriteLine("Originalna rec: " + a.OriginalnaRec);
+            Console.WriteLine("Provera 'CelziOsvaja': " + a.ProveriAnagram("CelziOsvaja"));
+            Console.WriteLine("Provera 'ArsenalOsvaja': " + a.ProveriAnagram("marogitrenap"));
+            Console.WriteLine("Provera 'JunajtedOsvaja': " + a.ProveriAnagram("programer"));
+
+
             while (true)
             { 
                 byte[] buffer = new byte[1024];
