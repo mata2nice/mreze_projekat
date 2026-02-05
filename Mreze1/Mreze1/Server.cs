@@ -31,15 +31,7 @@ namespace Mreze1
             Console.WriteLine("TCP server (listen) spreman na portu 51000...");
 
 
-            Anagrami a = new Anagrami();
-            a.UcitajRec();
-
-
-            //cisto proveravamo ko osvaja ligu
-            Console.WriteLine("Originalna rec: " + a.OriginalnaRec);
-            Console.WriteLine("Provera 'CelziOsvaja': " + a.ProveriAnagram("CelziOsvaja"));
-            Console.WriteLine("Provera 'ArsenalOsvaja': " + a.ProveriAnagram("marogitrenap"));
-            Console.WriteLine("Provera 'JunajtedOsvaja': " + a.ProveriAnagram("programer"));
+          
 
 
             while (true)
@@ -135,7 +127,40 @@ namespace Mreze1
                         if (startMsg.Trim().ToUpper() == "START")
                         {
                             Console.WriteLine("Primljen START. Kviz moze da pocne!");
+
+                            // --- ANAGRAMI ---
+                            Anagrami anagrami = new Anagrami();
+                            anagrami.UcitajRec("CelziOsvaja"); // server bira rec
+
+                            string porukaAnagram = "ANAGRAM_REČ: " + anagrami.OriginalnaRec;
+                            byte[] anagramBuf = Encoding.UTF8.GetBytes(porukaAnagram);
+                            tcpClientSocket.Send(anagramBuf);
+
+                            Console.WriteLine("Poslata rec za anagram: " + anagrami.OriginalnaRec);
+
+                            // PRIJEM ANAGRAMA OD KLIJENTA
+                            byte[] odgovorBuf = new byte[1024];
+                            int brOdgovor = tcpClientSocket.Receive(odgovorBuf);
+                            string anagramPoruka = Encoding.UTF8.GetString(odgovorBuf, 0, brOdgovor);
+
+                            // ocekujemo format: ANAGRAM: xxx
+                            string anagram = anagramPoruka.Substring("ANAGRAM: ".Length);
+
+                            bool tacno = anagrami.ProveriAnagram(anagram);
+
+                            if (tacno)
+                            {
+                                int poeni = anagrami.IzracunajPoene();
+                                Console.WriteLine("Anagram TACAN! Poeni: " + poeni);
+                            }
+                            else
+                            {
+                                Console.WriteLine("Anagram NIJE tacan.");
+                            }
+
                         }
+                        
+
                     }
                 }
                 else

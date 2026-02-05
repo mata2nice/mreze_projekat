@@ -77,6 +77,27 @@ namespace Klijent
 
             Console.WriteLine("Poslat START.");
 
+            // PRIJEM RECI ZA ANAGRAM
+            byte[] recBuf = new byte[1024];
+            int brRec = tcpSocket.Receive(recBuf);
+            string porukaRec = Encoding.UTF8.GetString(recBuf, 0, brRec);
+
+            Console.WriteLine(porukaRec);
+
+            // Izdvajamo rec
+            string originalnaRec = porukaRec.Substring("ANAGRAM_REČ: ".Length);
+
+            Console.Write("Unesite anagram za datu rec: ");
+            string mojAnagram = Console.ReadLine();
+
+            // Saljemo anagram serveru
+            string anagramPoruka = "ANAGRAM: " + mojAnagram;
+            byte[] mojAnagramBuf = Encoding.UTF8.GetBytes(anagramPoruka);
+            tcpSocket.Send(mojAnagramBuf);
+
+            Console.WriteLine("Anagram poslat serveru.");
+
+
             Console.ReadLine();
 
         }

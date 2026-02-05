@@ -11,14 +11,13 @@ namespace Mreze1
         public string OriginalnaRec { get; set; }
         public string PredlozeniAnagram { get; set; }
 
-        public void UcitajRec()
+        public void UcitajRec(string rec)
         {
-            OriginalnaRec = "CelziOsvaja";
+            OriginalnaRec = rec;
         }
 
         public bool ProveriAnagram(string anagram) 
         {
-            PredlozeniAnagram = anagram;
 
             if (anagram.Length != OriginalnaRec.Length)
             {
@@ -30,6 +29,11 @@ namespace Mreze1
             string sortiraniAnagram = new string(anagram.OrderBy(c => c).ToArray());
 
             return sortiranaOriginalna == sortiraniAnagram;
+        }
+
+        public int IzracunajPoene()
+        {
+            return OriginalnaRec.Length;
         }
     }
 }
