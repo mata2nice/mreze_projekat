@@ -62,9 +62,23 @@ namespace Klijent
             tcpSocket.Connect(tcpEP);
             Console.WriteLine("TCP konekcija uspostavljena sa serverom.");
 
-            // TCP komunikacija ide u sledecem koraku
+            // 1) PRIMI POZDRAV OD SERVERA
+            byte[] pozdravBuf = new byte[1024];
+            int br = tcpSocket.Receive(pozdravBuf);
+            string pozdrav = Encoding.UTF8.GetString(pozdravBuf, 0, br);
+
+            Console.WriteLine("Primljena poruka od servera:");
+            Console.WriteLine(pozdrav);
+
+            // 2) POSALJI START
+            string start = "START";
+            byte[] startBuf = Encoding.UTF8.GetBytes(start);
+            tcpSocket.Send(startBuf);
+
+            Console.WriteLine("Poslat START.");
 
             Console.ReadLine();
+
         }
     }
 }

@@ -21,6 +21,14 @@ namespace Mreze1
             Console.WriteLine("UDP server za prijavu igraca je pokrenut...");
             Console.WriteLine("Cekam prijave igraca...");
 
+            Socket tcpListenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            IPEndPoint tcpEP = new IPEndPoint(IPAddress.Any, 51000);
+            tcpListenSocket.Bind(tcpEP);
+            tcpListenSocket.Listen(10);
+
+            Console.WriteLine("TCP server (listen) spreman na portu 51000...");
+
+
             while (true)
             { 
                 byte[] buffer = new byte[1024];
@@ -28,7 +36,7 @@ namespace Mreze1
 
                 int ReceivedBytes = udpSocket.ReceiveFrom(buffer, ref clientEP);
                 string poruka = Encoding.UTF8.GetString(buffer, 0, ReceivedBytes);
-                Console.WriteLine("Primljena poruka od" + clientEP.ToString());
+                Console.WriteLine("Primljena poruka od " + clientEP.ToString());
                 Console.WriteLine(poruka);
                 Console.WriteLine("--------------------");
 
@@ -65,9 +73,40 @@ namespace Mreze1
                     else
                     {
                         Console.WriteLine("Prijava je ispravna.");
-                        // TEK OVDE kasnije:
-                        // - saljes TCP port
-                        // - cuvas igraca
+
+                        // 1) Saljemo TCP info klijentu (UDP odgovor)
+                        string tcpIP = "127.0.0.1";
+                        int tcpPort = 51000;
+
+                        string odgovor = "TCP: " + tcpIP + ", " + tcpPort;
+                        byte[] odgovorBuffer = Encoding.UTF8.GetBytes(odgovor);
+                        udpSocket.SendTo(odgovorBuffer, clientEP);
+
+                        Console.WriteLine("Poslat TCP info klijentu.");
+
+                        // 2) Cekamo TCP konekciju
+                        Console.WriteLine("Cekam TCP konekciju...");
+                        Socket tcpClientSocket = tcpListenSocket.Accept();
+                        Console.WriteLine("TCP konekcija uspostavljena!");
+
+                        // 3) Saljemo pozdravnu poruku
+                        string pozdrav =
+                            "Dobrodosli u trening igru kviza Kviskoteka, danasnji takmicar je " + ime;
+
+                        byte[] pozdravBuf = Encoding.UTF8.GetBytes(pozdrav);
+                        tcpClientSocket.Send(pozdravBuf);
+
+                        Console.WriteLine("Poslat pozdrav klijentu.");
+
+                        // 4) Cekamo START
+                        byte[] startBuf = new byte[256];
+                        int br = tcpClientSocket.Receive(startBuf);
+                        string startMsg = Encoding.UTF8.GetString(startBuf, 0, br);
+
+                        if (startMsg.Trim().ToUpper() == "START")
+                        {
+                            Console.WriteLine("Primljen START. Kviz moze da pocne!");
+                        }
                     }
                 }
                 else
