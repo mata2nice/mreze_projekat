@@ -3,7 +3,7 @@
     "Name": "New Profile",
     "Projects": [
       {
-        "Path": "Mreze1\\Mreze1.csproj",
+        "Path": "Mreze1\\Server.csproj",
         "Action": "Start"
       },
       {

@@ -10,6 +10,8 @@ namespace Mreze1
 {
     internal class Server
     {
+        static int sledeciId = 1;
+        static List<Igrac> igraci = new List<Igrac>();
         static void Main(string[] args)
         {
 
