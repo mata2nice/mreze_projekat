@@ -88,19 +88,38 @@ namespace Klijent
 
                 Console.WriteLine(deloviPO[0]); // pitanje
 
+                char slovo = 'A';
+
                 for (int i = 1; i < deloviPO.Length; i++)
                 {
-                    Console.WriteLine($"{i - 1}: {deloviPO[i]}");
+                    Console.WriteLine($"{slovo}) {deloviPO[i]}");
+                    slovo++;
                 }
 
-                Console.Write("Izaberite odgovor (0-3): ");
-                string unos = Console.ReadLine();
 
-                string odgovorPO = "PO_ODGOVOR: " + unos;
+                Console.Write("Izaberite odgovor (A/B/C/D): ");
+                string unos = Console.ReadLine().Trim().ToUpper();
+
+                int izbor = -1;
+
+                if (unos == "A") izbor = 0;
+                else if (unos == "B") izbor = 1;
+                else if (unos == "C") izbor = 2;
+                else if (unos == "D") izbor = 3;
+                else
+                {
+                    Console.WriteLine("Neispravan izbor.");
+                    return;
+                }
+
+                string odgovorPO = "PO_ODGOVOR: " + izbor;
                 byte[] odgBuf = Encoding.UTF8.GetBytes(odgovorPO);
                 tcpSocket.Send(odgBuf);
 
                 Console.WriteLine("PO odgovor poslat serveru.");
+
+               
+       
             }
             else
             {
