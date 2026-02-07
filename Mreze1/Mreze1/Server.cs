@@ -58,6 +58,9 @@ namespace Mreze1
                     Console.WriteLine("Izabrane igre:");
 
                     bool igraAnagram = false;
+                    bool igraPO = false;
+
+
                     for (int i = 1; i < delovi.Length; i++)
                     {
                         string igra = delovi[i].Trim();
@@ -74,6 +77,11 @@ namespace Mreze1
                             {
                                 igraAnagram = true;
                             }
+                            if (igra == "po")
+                            {
+                                igraPO = true;
+                            }
+
                         }
                     }
 
@@ -167,9 +175,42 @@ namespace Mreze1
                                     Console.WriteLine("Anagram NIJE tacan.");
                                 }
                             }
+                            if (igraPO)
+                            {
+                                Console.WriteLine("Pokrece se igra PITANJA I ODGOVORI.");
+
+                                PitanjaOdgovori po = new PitanjaOdgovori();
+                                po.UcitajPitanje();
+
+                                // Saljemo pitanje i odgovore
+                                string porukaPO = "PO_PITANJE: " + po.Pitanje + "|" +
+                                                  string.Join("|", po.Odgovori);
+                                byte[] poBuf = Encoding.UTF8.GetBytes(porukaPO);
+                                tcpClientSocket.Send(poBuf);
+
+                                Console.WriteLine("Poslato pitanje za PO.");
+
+                                // Prijem izbora (npr. "PO_ODGOVOR: 0")
+                                byte[] izborBuf = new byte[256];
+                                int brIzbor = tcpClientSocket.Receive(izborBuf);
+                                string izborPoruka = Encoding.UTF8.GetString(izborBuf, 0, brIzbor);
+
+                                int izbor = int.Parse(izborPoruka.Substring("PO_ODGOVOR: ".Length));
+
+                                if (po.Proveri(izbor))
+                                {
+                                    int poeni = po.Poeni();
+                                    Console.WriteLine("PO tacno! Poeni: " + poeni);
+                                }
+                                else
+                                {
+                                    Console.WriteLine("PO netacno.");
+                                }
+                            }
+
                             else
                             {
-                               // Console.WriteLine("Igra ANAGRAMI nije izabrana.");
+                                // Console.WriteLine("Igra ANAGRAMI nije izabrana.");
                             }
                         }
                         
