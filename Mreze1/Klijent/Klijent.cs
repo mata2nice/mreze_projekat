@@ -118,12 +118,37 @@ namespace Klijent
 
                 Console.WriteLine("PO odgovor poslat serveru.");
 
-               
-       
+
+
             }
             else
             {
-                Console.WriteLine("Nepoznata poruka od servera.");
+                Console.WriteLine("Pokrenuta igra ASOCIJACIJE.");
+
+                string stanje = gamePoruka;
+
+                while (true)
+                {
+                    Console.WriteLine(stanje);
+
+                    Console.Write("Unesite potez (A1, B:ODGOVOR ili K:ODGOVOR): ");
+                    string unos = Console.ReadLine();
+
+                    byte[] unosBuf = Encoding.UTF8.GetBytes(unos);
+                    tcpSocket.Send(unosBuf);
+
+                    // primi novo stanje od servera
+                    byte[] novoBuf = new byte[2048];
+                    int brNovo = tcpSocket.Receive(novoBuf);
+                    stanje = Encoding.UTF8.GetString(novoBuf, 0, brNovo);
+
+                    // izlaz ako je gotovo
+                    if (stanje.Contains("RESENA") || stanje.Contains("Kraj"))
+                    {
+                        Console.WriteLine(stanje);
+                        break;
+                    }
+                }
             }
 
             Console.ReadLine();

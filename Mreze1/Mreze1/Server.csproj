@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Anagrami.cs" />
+    <Compile Include="Asocijacije.cs" />
     <Compile Include="Igrac.cs" />
     <Compile Include="PitanjaOdgovori.cs" />
     <Compile Include="Server.cs" />
@@ -51,6 +52,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="asocijacije.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

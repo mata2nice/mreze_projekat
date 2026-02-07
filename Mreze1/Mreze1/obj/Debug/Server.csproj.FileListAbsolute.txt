@@ -5,3 +5,4 @@ C:\Users\Mateja\source\repos\mata2nice\mreze_projekat\Mreze1\Mreze1\obj\Debug\Se
 C:\Users\Mateja\source\repos\mata2nice\mreze_projekat\Mreze1\Mreze1\obj\Debug\Server.csproj.CoreCompileInputs.cache
 C:\Users\Mateja\source\repos\mata2nice\mreze_projekat\Mreze1\Mreze1\obj\Debug\Mreze1.exe
 C:\Users\Mateja\source\repos\mata2nice\mreze_projekat\Mreze1\Mreze1\obj\Debug\Mreze1.pdb
+C:\Users\Mateja\source\repos\mata2nice\mreze_projekat\Mreze1\Mreze1\bin\Debug\asocijacije.txt

@@ -1,4 +1,5 @@
 <Solution>
+  <Folder Name="/Solution Items/" />
   <Project Path="Klijent/Klijent.csproj" Id="249f0a65-cdb1-4233-b011-a3c59ec64251" />
   <Project Path="Mreze1/Server.csproj" Id="710e92da-1a97-490f-9ad4-7b2fb4553849" />
 </Solution>
