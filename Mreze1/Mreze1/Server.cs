@@ -57,6 +57,7 @@ namespace Mreze1
                     Console.WriteLine("Ime igraca: " + ime);
                     Console.WriteLine("Izabrane igre:");
 
+                    bool igraAnagram = false;
                     for (int i = 1; i < delovi.Length; i++)
                     {
                         string igra = delovi[i].Trim();
@@ -68,6 +69,11 @@ namespace Mreze1
                         else
                         {
                             Console.WriteLine("- " + igra);
+
+                            if (igra == "an")
+                            {
+                                igraAnagram = true;
+                            }
                         }
                     }
 
@@ -128,36 +134,43 @@ namespace Mreze1
                         {
                             Console.WriteLine("Primljen START. Kviz moze da pocne!");
 
-                            // --- ANAGRAMI ---
-                            Anagrami anagrami = new Anagrami();
-                            anagrami.UcitajRec("CelziOsvaja"); // server bira rec
-
-                            string porukaAnagram = "ANAGRAM_REČ: " + anagrami.OriginalnaRec;
-                            byte[] anagramBuf = Encoding.UTF8.GetBytes(porukaAnagram);
-                            tcpClientSocket.Send(anagramBuf);
-
-                            Console.WriteLine("Poslata rec za anagram: " + anagrami.OriginalnaRec);
-
-                            // PRIJEM ANAGRAMA OD KLIJENTA
-                            byte[] odgovorBuf = new byte[1024];
-                            int brOdgovor = tcpClientSocket.Receive(odgovorBuf);
-                            string anagramPoruka = Encoding.UTF8.GetString(odgovorBuf, 0, brOdgovor);
-
-                            // ocekujemo format: ANAGRAM: xxx
-                            string anagram = anagramPoruka.Substring("ANAGRAM: ".Length);
-
-                            bool tacno = anagrami.ProveriAnagram(anagram);
-
-                            if (tacno)
+                            if (igraAnagram)
                             {
-                                int poeni = anagrami.IzracunajPoene();
-                                Console.WriteLine("Anagram TACAN! Poeni: " + poeni);
+                                Console.WriteLine("Pokrece se igra ANAGRAMI.");
+
+                                // --- ANAGRAMI ---
+                                Anagrami anagrami = new Anagrami();
+                                anagrami.UcitajRec("CelziOsvaja");
+
+                                string porukaAnagram = "ANAGRAM_REČ: " + anagrami.OriginalnaRec;
+                                byte[] anagramBuf = Encoding.UTF8.GetBytes(porukaAnagram);
+                                tcpClientSocket.Send(anagramBuf);
+
+                                Console.WriteLine("Poslata rec za anagram: " + anagrami.OriginalnaRec);
+
+                                // PRIJEM ANAGRAMA OD KLIJENTA
+                                byte[] odgovorBuf = new byte[1024];
+                                int brOdgovor = tcpClientSocket.Receive(odgovorBuf);
+                                string anagramPoruka = Encoding.UTF8.GetString(odgovorBuf, 0, brOdgovor);
+
+                                string anagram = anagramPoruka.Substring("ANAGRAM: ".Length);
+
+                                bool tacno = anagrami.ProveriAnagram(anagram);
+
+                                if (tacno)
+                                {
+                                    int poeni = anagrami.IzracunajPoene();
+                                    Console.WriteLine("Anagram TACAN! Poeni: " + poeni);
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Anagram NIJE tacan.");
+                                }
                             }
                             else
                             {
-                                Console.WriteLine("Anagram NIJE tacan.");
+                               // Console.WriteLine("Igra ANAGRAMI nije izabrana.");
                             }
-
                         }
                         
 
