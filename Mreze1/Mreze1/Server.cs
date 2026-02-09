@@ -212,20 +212,25 @@ namespace Mreze1
                                     Console.WriteLine("PO netacno.");
                                 }
                             }
-                            if (igraAS) 
+                            if (igraAS)
                             {
                                 Console.WriteLine("Pokrece se igra ASOCIJACIJE.");
+
+                                // 1) Kreiranje i ucitavanje asocijacije
                                 Asocijacije asoc = new Asocijacije();
                                 asoc.UcitaAsocijaciju("asocijacije.txt");
 
-                                // 2) Slanje pocetnog stanja
-                                string stanje = FormatirajAsocijaciju(asoc);
+                                // 2) Evidencija resenih kolona
+                                bool[] resenaKolona = new bool[4];
+
+                                // 3) Slanje pocetnog stanja
+                                string stanje = FormatirajAsocijaciju(asoc, resenaKolona);
                                 byte[] stanjeBuf = Encoding.UTF8.GetBytes(stanje);
                                 tcpClientSocket.Send(stanjeBuf);
 
                                 int greske = 0;
 
-                                // 3) Petlja igre (do 5 gresaka ili resenja)
+                                // 4) Glavna petlja igre
                                 while (greske < 5)
                                 {
                                     byte[] unosBuf = new byte[256];
@@ -234,25 +239,28 @@ namespace Mreze1
 
                                     Console.WriteLine("Primljen unos: " + unos);
 
-                                    // A1, B3, itd – otvaranje polja
+                                    // A1, B3, C2...
                                     if (unos.Length == 2 && char.IsLetter(unos[0]) && char.IsDigit(unos[1]))
                                     {
                                         int kol = char.ToUpper(unos[0]) - 'A';
                                         int red = unos[1] - '1';
 
                                         if (kol >= 0 && kol < 4 && red >= 0 && red < 4)
-                                        {
                                             asoc.OtvoriPolje(kol, red);
-                                        }
                                     }
-                                    // A:ODGOVOR – pokusaj kolone
+                                    // A:ODGOVOR – resenje kolone
                                     else if (unos.Length > 2 && unos[1] == ':')
                                     {
                                         int kol = char.ToUpper(unos[0]) - 'A';
-                                        string odgovorKolone = unos.Substring(2);
+                                        string odgovorKol = unos.Substring(2);
 
-                                        if (!asoc.Kolone[kol][4]
-                                            .Equals(odgovorKolone, StringComparison.OrdinalIgnoreCase))
+                                        if (asoc.Kolone[kol][4]
+                                            .Equals(odgovorKol, StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            resenaKolona[kol] = true;
+                                            Console.WriteLine($"Kolona {(char)('A' + kol)} resena!");
+                                        }
+                                        else
                                         {
                                             greske++;
                                         }
@@ -260,12 +268,12 @@ namespace Mreze1
                                     // K:ODGOVOR – konacno resenje
                                     else if (unos.StartsWith("K:"))
                                     {
-                                        string konacniOdgovor = unos.Substring(2);
+                                        string konacno = unos.Substring(2);
 
                                         if (asoc.KonacnoResenje
-                                            .Equals(konacniOdgovor, StringComparison.OrdinalIgnoreCase))
+                                            .Equals(konacno, StringComparison.OrdinalIgnoreCase))
                                         {
-                                            Console.WriteLine("Asocijacija RESENA.");
+                                            Console.WriteLine("Asocijacija RESENA!");
                                             break;
                                         }
                                         else
@@ -274,8 +282,8 @@ namespace Mreze1
                                         }
                                     }
 
-                                    // 4) Slanje novog stanja nakon svakog poteza
-                                    string novoStanje = FormatirajAsocijaciju(asoc);
+                                    // 5) Slanje azuriranog stanja
+                                    string novoStanje = FormatirajAsocijaciju(asoc, resenaKolona);
                                     byte[] novoBuf = Encoding.UTF8.GetBytes(novoStanje);
                                     tcpClientSocket.Send(novoBuf);
                                 }
@@ -302,7 +310,7 @@ namespace Mreze1
             }
         }
 
-        static string FormatirajAsocijaciju(Asocijacije a)
+        static string FormatirajAsocijaciju(Asocijacije a, bool[] resenaKolona)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -318,7 +326,10 @@ namespace Mreze1
                     );
                 }
 
-                sb.AppendLine($"{kol}: ???");
+                if (resenaKolona[k])
+                    sb.AppendLine($"{kol}: {a.Kolone[k][4]}");
+                else
+                    sb.AppendLine($"{kol}: ???");
             }
 
             return sb.ToString();
