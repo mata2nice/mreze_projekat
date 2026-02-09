@@ -5,3 +5,11 @@ C:\Users\Mateja\source\repos\mata2nice\mreze_projekat\Mreze1\Klijent\obj\Debug\K
 C:\Users\Mateja\source\repos\mata2nice\mreze_projekat\Mreze1\Klijent\obj\Debug\Klijent.csproj.CoreCompileInputs.cache
 C:\Users\Mateja\source\repos\mata2nice\mreze_projekat\Mreze1\Klijent\obj\Debug\Klijent.exe
 C:\Users\Mateja\source\repos\mata2nice\mreze_projekat\Mreze1\Klijent\obj\Debug\Klijent.pdb
+C:\Users\Win 10\Desktop\MREZE\PROJEKAT\Mreze1\Klijent\bin\Debug\Klijent.exe.config
+C:\Users\Win 10\Desktop\MREZE\PROJEKAT\Mreze1\Klijent\bin\Debug\Klijent.exe
+C:\Users\Win 10\Desktop\MREZE\PROJEKAT\Mreze1\Klijent\bin\Debug\Klijent.pdb
+C:\Users\Win 10\Desktop\MREZE\PROJEKAT\Mreze1\Klijent\obj\Debug\Klijent.csproj.AssemblyReference.cache
+C:\Users\Win 10\Desktop\MREZE\PROJEKAT\Mreze1\Klijent\obj\Debug\Klijent.exe.config
+C:\Users\Win 10\Desktop\MREZE\PROJEKAT\Mreze1\Klijent\obj\Debug\Klijent.csproj.CoreCompileInputs.cache
+C:\Users\Win 10\Desktop\MREZE\PROJEKAT\Mreze1\Klijent\obj\Debug\Klijent.exe
+C:\Users\Win 10\Desktop\MREZE\PROJEKAT\Mreze1\Klijent\obj\Debug\Klijent.pdb

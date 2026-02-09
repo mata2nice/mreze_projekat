@@ -249,7 +249,9 @@ namespace Mreze1
                                             asoc.OtvoriPolje(kol, red);
                                     }
                                     // A:ODGOVOR – resenje kolone
-                                    else if (unos.Length > 2 && unos[1] == ':')
+                                    else if (unos.Length > 2 && unos[1] == ':' &&
+                                         char.ToUpper(unos[0]) >= 'A' &&
+                                         char.ToUpper(unos[0]) <= 'D')
                                     {
                                         int kol = char.ToUpper(unos[0]) - 'A';
                                         string odgovorKol = unos.Substring(2);
@@ -265,6 +267,7 @@ namespace Mreze1
                                             greske++;
                                         }
                                     }
+
                                     // K:ODGOVOR – konacno resenje
                                     else if (unos.StartsWith("K:"))
                                     {
