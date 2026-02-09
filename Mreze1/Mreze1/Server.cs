@@ -222,6 +222,7 @@ namespace Mreze1
 
                                 // 2) Evidencija resenih kolona
                                 bool[] resenaKolona = new bool[4];
+                                bool krajIgre = false;
 
                                 // 3) Slanje pocetnog stanja
                                 string stanje = FormatirajAsocijaciju(asoc, resenaKolona);
@@ -229,6 +230,7 @@ namespace Mreze1
                                 tcpClientSocket.Send(stanjeBuf);
 
                                 int greske = 0;
+                                int poeniAS = 0;
 
                                 // 4) Glavna petlja igre
                                 while (greske < 5)
@@ -256,42 +258,64 @@ namespace Mreze1
                                         int kol = char.ToUpper(unos[0]) - 'A';
                                         string odgovorKol = unos.Substring(2);
 
-                                        if (asoc.Kolone[kol][4]
-                                            .Equals(odgovorKol, StringComparison.OrdinalIgnoreCase))
+                                        if (!resenaKolona[kol] && asoc.Kolone[kol][4].Equals(odgovorKol, StringComparison.OrdinalIgnoreCase))
                                         {
                                             resenaKolona[kol] = true;
-                                            Console.WriteLine($"Kolona {(char)('A' + kol)} resena!");
+
+                                            // broj neotvorenih polja u koloni
+                                            int neotvorena = 0;
+                                            for (int r = 0; r < 4; r++)
+                                                if (!asoc.Otvoreno[kol][r])
+                                                    neotvorena++;
+
+                                            int osvojeniPoeni = neotvorena + 2;
+                                            poeniAS += osvojeniPoeni;
+
+                                            Console.WriteLine(
+                                                $"Kolona {(char)('A' + kol)} resena! +" +
+                                                $"{osvojeniPoeni} poena (ukupno {poeniAS})"
+                                            );
                                         }
                                         else
                                         {
                                             greske++;
                                         }
+
                                     }
 
                                     // K:ODGOVOR – konacno resenje
                                     else if (unos.StartsWith("K:"))
                                     {
                                         string konacno = unos.Substring(2);
-
                                         if (asoc.KonacnoResenje
                                             .Equals(konacno, StringComparison.OrdinalIgnoreCase))
                                         {
+                                            poeniAS += 10;
                                             Console.WriteLine("Asocijacija RESENA!");
+                                            krajIgre = true;
+                                            Console.WriteLine($"+10 poena za konacno resenje (UKUPNO: {poeniAS})");
                                             break;
                                         }
                                         else
                                         {
                                             greske++;
                                         }
+
                                     }
 
                                     // 5) Slanje azuriranog stanja
-                                    string novoStanje = FormatirajAsocijaciju(asoc, resenaKolona);
-                                    byte[] novoBuf = Encoding.UTF8.GetBytes(novoStanje);
-                                    tcpClientSocket.Send(novoBuf);
+                                    if (!krajIgre)
+                                    {
+                                        string novoStanje = FormatirajAsocijaciju(asoc, resenaKolona);
+                                        byte[] novoBuf = Encoding.UTF8.GetBytes(novoStanje);
+                                        tcpClientSocket.Send(novoBuf);
+                                    }
+
                                 }
 
                                 Console.WriteLine("Kraj igre ASOCIJACIJE.");
+                                Console.WriteLine($"Ukupno poena iz ASOCIJACIJA: {poeniAS}");
+
                             }
 
                             else
